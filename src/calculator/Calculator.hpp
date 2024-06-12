@@ -7,6 +7,7 @@ class Calculator{
     private:
         double result;
         double visit(ASTNode* node);
+        double resolveTerminalNode(ASTNode* node);
     public:
         Calculator();
         double calculate(ASTNode* root);

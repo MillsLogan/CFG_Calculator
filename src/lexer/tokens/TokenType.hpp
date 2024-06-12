@@ -5,6 +5,7 @@
 
 enum TokenType {
     NUMBER,
+    IDENTIFIER,
     ADDOPS,
     MULOPS,
     LPAREN,

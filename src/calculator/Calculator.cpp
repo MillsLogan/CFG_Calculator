@@ -11,7 +11,7 @@ double Calculator::calculate(ASTNode* root){
 
 double Calculator::visit(ASTNode* node){
     if(node->getLeft() == nullptr && node->getRight() == nullptr){
-        result = stod(node->getOp().getValue()); // Convert string to double
+        result = this->resolveTerminalNode(node);
     } else {
         double left = this->visit(node->getLeft());
         double right = this->visit(node->getRight());
@@ -26,4 +26,19 @@ double Calculator::visit(ASTNode* node){
         }
     }
     return result;
+}
+
+double Calculator::resolveTerminalNode(ASTNode* node){
+    if(node->getOp().getType() == TokenType::NUMBER){
+        return stod(node->getOp().getValue());
+    } else if(node->getOp().getType() == TokenType::IDENTIFIER){
+        if(node->getOp().getValue() == "PI"){
+            return 3.14159265359;
+        } else if(node->getOp().getValue() == "E"){
+            return 2.71828182846;
+        }else if(node->getOp().getValue() == "ans"){
+            return result;
+        }
+    }
+    return 0;
 }

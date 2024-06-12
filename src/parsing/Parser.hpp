@@ -20,6 +20,7 @@ class Parser {
         Token getNextToken();
         ASTNode* createPrimary();
         void eat(TokenType type);
+        ASTNode* parse(std::string expression);
 };
 
 #endif

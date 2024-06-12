@@ -6,6 +6,7 @@
 
 void Lexer::init(){
     token_regexes.push_back(std::pair<std::regex, TokenType>(std::regex("^([\\d]+([\\.][\\d]+)?)"), TokenType::NUMBER));
+    token_regexes.push_back(std::pair<std::regex, TokenType>(std::regex("^([a-zA-Z]+)"), TokenType::IDENTIFIER));
     token_regexes.push_back(std::pair<std::regex, TokenType>(std::regex("^([\\+\\-])"), TokenType::ADDOPS));
     token_regexes.push_back(std::pair<std::regex, TokenType>(std::regex("^([\\*\\/])"), TokenType::MULOPS));
     token_regexes.push_back(std::pair<std::regex, TokenType>(std::regex("^(\\()"), TokenType::LPAREN));

@@ -14,6 +14,18 @@ Parser::Parser(Lexer* lexer){
     this->currentToken = this->getNextToken();
 }
 
+ASTNode* Parser::parse(std::string expression){
+    /**
+     * @brief Parse the given expression
+     * 
+     * @param expression 
+     * @return ASTNode* 
+     */
+    this->lexer->setInput(expression);
+    this->currentToken = this->getNextToken();
+    return this->parse();
+}
+
 ASTNode* Parser::parse(){
     ASTNode* expression = this->createExpression();
     cout << "Parsed expression: " << expression->toString() << endl;
@@ -69,7 +81,11 @@ ASTNode* Parser::createPrimary(){
         this->eat(TokenType::RPAREN);
 
         return node;
-    } else {
+    } else if(token.getType() == TokenType::IDENTIFIER){
+        this->eat(TokenType::IDENTIFIER);
+        
+        return new ASTNode(token);
+    }else{
         cout << "Unexpected token: " << token.getValue() << endl;
         exit(0);
     }
