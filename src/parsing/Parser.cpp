@@ -14,24 +14,38 @@ Parser::Parser(Lexer* lexer){
     this->currentToken = this->getNextToken();
 }
 
+/**
+ * @brief Takes a string expression and uses the lexer to tokenize it
+ * and then parses the tokens into an Abstract Syntax Tree (AST) and 
+ * returns the root node of the AST
+ * 
+ * @param string expression 
+ * @return ASTNode* - The root node of the AST
+ */
 ASTNode* Parser::parse(std::string expression){
-    /**
-     * @brief Parse the given expression
-     * 
-     * @param expression 
-     * @return ASTNode* 
-     */
     this->lexer->setInput(expression);
     this->currentToken = this->getNextToken();
     return this->parse();
 }
 
+/**
+ * @brief This function parses the tokens from the lexer into
+ * an Abstract Syntax Tree (AST) and returns the root node of the AST
+ * 
+ * @return ASTNode* 
+ */
 ASTNode* Parser::parse(){
     ASTNode* expression = this->createExpression();
     cout << "Parsed expression: " << expression->toString() << endl;
     return expression;
 }
 
+/**
+ * @brief This function checks if the current token is of the type
+ * specified in the argument and if it is, it moves to the next token
+ * 
+ * @param type 
+ */
 void Parser::eat(TokenType type){
     if(this->currentToken.getType() == type){
         this->currentToken = this->getNextToken();
@@ -41,6 +55,11 @@ void Parser::eat(TokenType type){
     }
 }
 
+/**
+ * @brief This function creates an expression node
+ * 
+ * @return ASTNode* 
+ */
 ASTNode* Parser::createExpression(){
     ASTNode* node = this->createTerm();
 
@@ -53,6 +72,11 @@ ASTNode* Parser::createExpression(){
     return node;
 }
 
+/**
+ * @brief This function creates a term node
+ * 
+ * @return ASTNode* 
+ */
 ASTNode* Parser::createTerm(){
     ASTNode* term = this->createFactor();
 
@@ -65,10 +89,20 @@ ASTNode* Parser::createTerm(){
     return term;
 }
 
+/**
+ * @brief This function creates a factor node
+ * 
+ * @return ASTNode* 
+ */
 ASTNode* Parser::createFactor(){
     return this->createPrimary();
 }
 
+/**
+ * @brief This function creates a primary node
+ * 
+ * @return ASTNode* 
+ */
 ASTNode* Parser::createPrimary(){
     Token token = this->currentToken;
     if(token.getType() == TokenType::NUMBER){
@@ -91,6 +125,14 @@ ASTNode* Parser::createPrimary(){
     }
 }
 
+/**
+ * @brief This function gets the next token from the lexer
+ * and checks if the token is of type WHITESPACE and if it is
+ * it gets the next token until it gets a token that is not of
+ * type WHITESPACE and returns that token
+ * 
+ * @return Token 
+ */
 Token Parser::getNextToken(){
     Token token = this->lexer->getNextToken();
     if(token.getType() == TokenType::UNKNOWN){
