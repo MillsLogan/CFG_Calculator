@@ -18,6 +18,7 @@ class ASTNode {
         ASTNode* getLeft();
         ASTNode* getRight();
         std::string toString();
+        ~ASTNode();
 };
 
 #endif

@@ -46,3 +46,8 @@ std::string ASTNode::toString(){
     }
 }
 
+ASTNode::~ASTNode(){
+    delete this->left;
+    delete this->right;
+}
+

@@ -7,23 +7,21 @@ using namespace std;
 int main(){
     Parser parser(new Lexer("1 + 2"));
     Calculator calculator;
+    cout << "Welcome to the CFG Calculator!" << endl;
+    cout << "Enter an expression to calculate" << endl;
+    cout << "Type 'exit' at any time to quit" << endl;
     while(true){
-        cout << "Welcome to the CFG Calculator!" << endl;
-        cout << "Enter an expression: ";
         string expression;
         getline(cin, expression);
-        ASTNode* root = parser.parse(expression);
-        double result = calculator.calculate(root);
-        cout << "Result: " << result << endl;
-        cout << "Do you want to continue? (y/n): ";
-        char choice;
-        cin >> choice;
-
-        if(choice == 'n'){
+        if(expression == "exit"){
             break;
         }
+
+        ASTNode* root = parser.parse(expression);
+        double result = calculator.calculate(root);
         
-        cin.ignore();
+        delete root;
+        cout << "Result: " << result << endl;
     }
 }
 

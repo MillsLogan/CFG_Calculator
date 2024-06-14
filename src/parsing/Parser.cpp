@@ -146,3 +146,10 @@ Token Parser::getNextToken(){
         return this->getNextToken();
     }
 }
+
+Parser::~Parser(){
+    /**
+     * @brief Destroy the Parser:: Parser object
+     */
+    delete this->lexer;
+}

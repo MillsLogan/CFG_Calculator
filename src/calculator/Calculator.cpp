@@ -6,7 +6,8 @@ Calculator::Calculator(){
 }
 
 double Calculator::calculate(ASTNode* root){
-    return this->visit(root);
+    double result = this->visit(root);
+    return result;
 }
 
 double Calculator::visit(ASTNode* node){
