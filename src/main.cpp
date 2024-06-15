@@ -22,6 +22,19 @@ int main(){
                 cout << key << " = " << val << endl;
             }
             continue;
+        }else if(expression == "clear"){
+            system("clear");
+            cout << "Would you like to clear the variables? (y/n)" << endl;
+            string response;
+            getline(cin, response);
+            
+            if(response == "y"){
+                calculator = Calculator();
+                cout << "Variables cleared!" << endl;
+            }else{
+                cout << "Variables not cleared!" << endl;
+            }
+            continue;
         }
 
         ASTNode* root = parser.parse(expression);
