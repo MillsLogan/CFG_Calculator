@@ -116,7 +116,7 @@ Would you like to clear the variables? (y/n)
 
 \text{Exponential Operations <EO>}&
 \begin{cases}
-    \char`\^
+    \widehat{}
 
 \end{cases}\\
 \\
