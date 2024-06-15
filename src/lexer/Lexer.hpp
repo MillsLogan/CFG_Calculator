@@ -3,7 +3,6 @@
 
 #include <string>
 #include <regex>
-#include "tokens/TokenType.hpp"
 #include "tokens/Token.hpp"
 #include <vector>
 

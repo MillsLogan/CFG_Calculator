@@ -17,7 +17,6 @@ class Parser {
         ASTNode* createExpression();
         ASTNode* createTerm();
         ASTNode* createFactor();
-        Token getNextToken();
         ASTNode* createPrimary();
         void eat(TokenType type);
         ASTNode* parse(std::string expression);

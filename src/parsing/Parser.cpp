@@ -1,6 +1,5 @@
 #include "Parser.hpp"
 #include "../lexer/tokens/Token.hpp"
-#include "../lexer/tokens/TokenType.hpp"
 #include <iostream>
 #include "tree_nodes/ASTNode.hpp"
 
@@ -11,7 +10,6 @@ Parser::Parser(Lexer* lexer){
      * @brief Construct a new Parser:: Parser object
      */
     this->lexer = lexer;
-    this->currentToken = this->getNextToken();
 }
 
 /**
@@ -24,7 +22,7 @@ Parser::Parser(Lexer* lexer){
  */
 ASTNode* Parser::parse(std::string expression){
     this->lexer->setInput(expression);
-    this->currentToken = this->getNextToken();
+    this->currentToken = this->lexer->getNextToken();
     return this->parse();
 }
 
@@ -47,11 +45,15 @@ ASTNode* Parser::parse(){
  * @param type 
  */
 void Parser::eat(TokenType type){
-    if(this->currentToken.getType() == type){
-        this->currentToken = this->getNextToken();
-    } else {
-        cout << "Unexpected token: " << this->currentToken.getValue() << endl;
+    if(this->currentToken.type != type){
+        cout << "Unexpected token: " << this->currentToken.value << "with type: " << this->currentToken.type << endl;
         exit(0);
+    }
+
+    if(this->lexer->hasNextToken()){
+        this->currentToken = this->lexer->getNextToken();
+    }else{
+        this->currentToken = Token("", END);
     }
 }
 
@@ -63,7 +65,7 @@ void Parser::eat(TokenType type){
 ASTNode* Parser::createExpression(){
     ASTNode* node = this->createTerm();
 
-    while(currentToken.getType() == TokenType::ADDOPS){
+    while(currentToken.type == TokenType::ADDOPS){
         Token token = this->currentToken;
         this->eat(TokenType::ADDOPS);
         node = new ASTNode(token, node, this->createTerm());
@@ -80,7 +82,7 @@ ASTNode* Parser::createExpression(){
 ASTNode* Parser::createTerm(){
     ASTNode* term = this->createFactor();
 
-    while(currentToken.getType() == TokenType::MULOPS){
+    while(currentToken.type == TokenType::MULOPS){
         Token token = this->currentToken;
         this->eat(TokenType::MULOPS);
         term = new ASTNode(token, term, this->createFactor());    
@@ -95,7 +97,13 @@ ASTNode* Parser::createTerm(){
  * @return ASTNode* 
  */
 ASTNode* Parser::createFactor(){
-    return this->createPrimary();
+    ASTNode* factor = this->createPrimary();
+    while(this->currentToken.type == TokenType::EXPONENT){
+        Token token = this->currentToken;
+        this->eat(TokenType::EXPONENT);
+        factor = new ASTNode(token, factor, this->createFactor());
+    }
+    return factor;
 }
 
 /**
@@ -105,45 +113,26 @@ ASTNode* Parser::createFactor(){
  */
 ASTNode* Parser::createPrimary(){
     Token token = this->currentToken;
-    if(token.getType() == TokenType::NUMBER){
-        this->eat(TokenType::NUMBER);
+
+    if(token.type == TokenType::LITERAL){
+        this->eat(TokenType::LITERAL);
 
         return new ASTNode(token);
-    } else if(token.getType() == TokenType::LPAREN){
+    } else if(token.type == TokenType::LPAREN){
         this->eat(TokenType::LPAREN);
         ASTNode* node = this->createExpression();
         this->eat(TokenType::RPAREN);
-
         return node;
-    } else if(token.getType() == TokenType::IDENTIFIER){
+    } else if(token.type == TokenType::IDENTIFIER){
         this->eat(TokenType::IDENTIFIER);
         
         return new ASTNode(token);
+    }else if(token.type == TokenType::UNARYOPS){
+        this->eat(TokenType::UNARYOPS);
+        return new ASTNode(token, this->createPrimary(), nullptr);
     }else{
-        cout << "Unexpected token: " << token.getValue() << endl;
+        cout << "Unexpected token: " << token.value << "with type: " << token.type << endl;
         exit(0);
-    }
-}
-
-/**
- * @brief This function gets the next token from the lexer
- * and checks if the token is of type WHITESPACE and if it is
- * it gets the next token until it gets a token that is not of
- * type WHITESPACE and returns that token
- * 
- * @return Token 
- */
-Token Parser::getNextToken(){
-    Token token = this->lexer->getNextToken();
-    if(token.getType() == TokenType::UNKNOWN){
-        cout << "Unknown token found: " << token.getValue() << endl;
-        exit(0);
-    }
-
-    if(token.getType() != TokenType::WHITESPACE){
-        return token;
-    } else {
-        return this->getNextToken();
     }
 }
 

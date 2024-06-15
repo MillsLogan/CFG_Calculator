@@ -8,6 +8,7 @@ class Calculator{
         double result;
         double visit(ASTNode* node);
         double resolveTerminalNode(ASTNode* node);
+        double resolveUnaryNode(ASTNode* node);
     public:
         Calculator();
         double calculate(ASTNode* root);

@@ -1,6 +1,5 @@
 #include "ASTNode.hpp"
 #include "../../lexer/tokens/Token.hpp"
-#include "../../lexer/tokens/TokenType.hpp"
 
 ASTNode::ASTNode(Token op){
     this->left = nullptr;
@@ -40,9 +39,11 @@ ASTNode* ASTNode::getRight(){
 
 std::string ASTNode::toString(){
     if(this->left == nullptr && this->right == nullptr){
-        return this->op.getValue();
-    } else {
-        return "(" + this->left->toString() + this->op.getValue() + this->right->toString() + ")";
+        return this->op.value;
+    } else if(this->left != nullptr && this->right == nullptr){
+        return this->op.value + "(" + this->left->toString() + ")";
+    }else {
+        return "(" + this->left->toString() + this->op.value + this->right->toString() + ")";
     }
 }
 
