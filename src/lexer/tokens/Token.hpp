@@ -15,6 +15,7 @@ enum TokenType{
     RPAREN,
     WHITESPACE,
     UNKNOWN,
+    EQUALS,
     END
 };
 

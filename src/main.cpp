@@ -16,6 +16,12 @@ int main(){
         getline(cin, expression);
         if(expression == "exit"){
             break;
+        }else if(expression == "vars"){
+            cout << "Variables: " << endl;
+            for(auto const& [key, val] : calculator.getVariables()){
+                cout << key << " = " << val << endl;
+            }
+            continue;
         }
 
         ASTNode* root = parser.parse(expression);
@@ -24,17 +30,6 @@ int main(){
         delete root;
         cout << "Result: " << result << endl;
     }
-
-    // std::regex regex = std::regex("^(sqrt)");
-    // std::string str = "(4)";
-    // std::smatch match;
-    // if(std::regex_search(str, match, regex)){
-    //     cout << "Matched!" << endl;
-    // } else {
-    //     cout << "No match" << endl;
-    // }
-    // return 0;
-    // return 0;
 }
 
 

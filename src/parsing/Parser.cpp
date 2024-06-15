@@ -71,6 +71,12 @@ ASTNode* Parser::createExpression(){
         node = new ASTNode(token, node, this->createTerm());
     }
 
+    if(this->currentToken.type == TokenType::EQUALS){
+        Token token = this->currentToken;
+        this->eat(TokenType::EQUALS);
+        node = new ASTNode(token, node, this->createExpression());
+    }
+
     return node;
 }
 
