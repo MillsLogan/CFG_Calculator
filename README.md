@@ -56,7 +56,7 @@ Would you like to clear the variables? (y/n)
 
 # Grammar
 
-$$
+```math
 \begin{align*}
 
 \text{Expression <E>}&
@@ -132,4 +132,4 @@ $$
 \end{cases}
 
 \end{align*}
-$$
+```
