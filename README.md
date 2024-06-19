@@ -27,6 +27,10 @@ To set a variable the input should start with a string followed by a "=" then th
 Parsed expression: (myVariable=((3+4)+(6*(7-3))))
 result: 31
 ```
+> [!WARNING]
+> Constants can be overwritten.
+> If the user sets a variable, like `pi` this will overwrite the constant value of pi.
+
 Now if we want to access the value of `myVariable` we can just put it into our expressions, like it's a number.
 ```bash
 > 3 / myVariable
