@@ -5,20 +5,32 @@
 
 using namespace std;
 
+/**
+ * @brief Construct a new Parser:: Parser object
+ * 
+ * @param `Lexer` lexer 
+ * 
+ * @see Lexer
+ */
 Parser::Parser(Lexer* lexer){
-    /**
-     * @brief Construct a new Parser:: Parser object
-     */
     this->lexer = lexer;
 }
 
 /**
- * @brief Takes a string expression and uses the lexer to tokenize it
- * and then parses the tokens into an Abstract Syntax Tree (AST) and 
- * returns the root node of the AST
+ * @brief Creates an Abstract Syntax Tree (AST) from `expression` and returns the root node of the AST
  * 
- * @param string expression 
+ * Sets the input of the lexer to the expression and gets the first token from the lexer,
+ * then calls the `parse` function with no arguments to start the parsing process
+ * 
+ * @param[in] expression A string expression to parse
  * @return ASTNode* - The root node of the AST
+ * 
+ * @see parse
+ * @see Lexer::setInput
+ * @see Lexer::getNextToken
+ * @see ASTNode
+ * 
+ * @note This function is used to parse an expression from the command line
  */
 ASTNode* Parser::parse(std::string expression){
     this->lexer->setInput(expression);
@@ -27,10 +39,18 @@ ASTNode* Parser::parse(std::string expression){
 }
 
 /**
- * @brief This function parses the tokens from the lexer into
- * an Abstract Syntax Tree (AST) and returns the root node of the AST
+ * @brief Creates an Abstract Syntax Tree (AST) from the input of the lexer and returns the root node of the AST
  * 
- * @return ASTNode* 
+ * Calls the `createExpression` function to create the root node of the AST, then recursively creates the rest of the AST
+ * until the end of the input is reached, and returns the root node of the AST. The root node is then printed to the console,
+ * displaying the parsed expression to the user, with parentheses around each node to show the structure of the AST
+ * 
+ * @return ASTNode*
+ * 
+ * @see createExpression
+ * @see ASTNode
+ * 
+ * @note This function is used to parse an expression from the command line
  */
 ASTNode* Parser::parse(){
     ASTNode* expression = this->createExpression();
@@ -39,10 +59,17 @@ ASTNode* Parser::parse(){
 }
 
 /**
- * @brief This function checks if the current token is of the type
- * specified in the argument and if it is, it moves to the next token
+ * @brief Destroys the current token and gets the next token from the lexer, verifying the current token is of the expected type
  * 
- * @param type 
+ * Destroys the current token and gets the next token from the lexer, then checks if the current token is of the expected type,
+ * if it is not, an error message is printed to the console and the program exits. If the current token is of the expected type,
+ * the function continues, otherwise, the program exits. This will also set the current token to the end token if there are no more tokens,
+ * to signal the end of the input
+ * 
+ * @param[in] type The expected `TokenType` of the current token
+ * 
+ * @see TokenType
+ * @see Token
  */
 void Parser::eat(TokenType type){
     if(this->currentToken.type != type){
@@ -58,9 +85,15 @@ void Parser::eat(TokenType type){
 }
 
 /**
- * @brief This function creates an expression node
+ * @brief Creates an expression node
+ * 
+ * Creates an expression node, which will either be a term node or an expression node with an operator,
+ * and another expression node, valid operators are ADDOPS and EQUALS, which are used to create the ASTNode
  * 
  * @return ASTNode* 
+ * 
+ * @see createTerm
+ * @see ASTNode
  */
 ASTNode* Parser::createExpression(){
     ASTNode* node = this->createTerm();
@@ -81,9 +114,19 @@ ASTNode* Parser::createExpression(){
 }
 
 /**
- * @brief This function creates a term node
+ * @brief Creates a term node, which is a node with a MULOP operator and two factor nodes as children,
+ * if no MULOP operator is found, it returns the factor node.
  * 
- * @return ASTNode* 
+ * Creates a term node by creating a factor node and then checking if the current token is a MULOPS token
+ * If it is, it creates a new ASTNode with the current token as the operator and the left child as the current node
+ * and the right child as the result of calling createFactor
+ * 
+ * This process is repeated until there are no more MULOPS tokens
+ * 
+ * @return ASTNode*
+ * 
+ * @see createFactor
+ * @see ASTNode
  */
 ASTNode* Parser::createTerm(){
     ASTNode* term = this->createFactor();
@@ -98,7 +141,10 @@ ASTNode* Parser::createTerm(){
 }
 
 /**
- * @brief This function creates a factor node
+ * @brief Create a factor node
+ * 
+ * Creates a factor node by creating a primary node and then checking if the current token is an EXPONENT token,
+ * if it is, it creates a new ASTNode with the current token as the operator and the left child as the current node
  * 
  * @return ASTNode* 
  */
@@ -113,9 +159,17 @@ ASTNode* Parser::createFactor(){
 }
 
 /**
- * @brief This function creates a primary node
+ * @brief Create a primary node
+ * 
+ * Creates a primary node by checking the current token type, if it is a LITERAL, LPAREN, or IDENTIFIER token,
+ * it creates a new ASTNode with the current token, if it is a UNARYOPS token, it creates a new ASTNode with the current token
+ * and the result of calling createPrimary as the left child, and nullptr as the right child. If the current token is a LPAREN,
+ * it calls eat with the LPAREN token, then creates a new ASTNode with the result of calling createExpression, if the next token is
+ * not a RPAREN an error message will raise in the eat function
  * 
  * @return ASTNode* 
+ * 
+ * @see eat
  */
 ASTNode* Parser::createPrimary(){
     Token token = this->currentToken;
@@ -145,6 +199,10 @@ ASTNode* Parser::createPrimary(){
 Parser::~Parser(){
     /**
      * @brief Destroy the Parser:: Parser object
+     * 
+     * Deletes the lexer object
+     * 
+     * @see Lexer
      */
     delete this->lexer;
 }
