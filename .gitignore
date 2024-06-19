@@ -35,5 +35,5 @@ calculator
 *.app
 
 # 
-*.dstore
+.DS_Store
 .vscode
